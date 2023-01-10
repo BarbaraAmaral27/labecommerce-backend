@@ -16,13 +16,13 @@ export const users: TUser[] = [
 export const products: TProduct[] = [
     {
         id: "1",
-        name: "caderno",
+        name: "colar",
         price: 20,
         category: Category.ACESSORIES,
     },
     {
         id: "2",
-        name: "agenda",
+        name: "sapatilha",
         price: 30,
         category: Category.CLOTHES_AND_SHOES,
     }
@@ -75,7 +75,7 @@ export function CreateUser(id: string, email: string, password: string) {
     })
   }
   
-  export function queryProductsByName (q: string) : TProduct[] | undefined {
+  export function queryProductsByName (q: string) : TProduct[] {
     return products.filter((product: TProduct) => {
         return product.name.toLowerCase() === q
     })
