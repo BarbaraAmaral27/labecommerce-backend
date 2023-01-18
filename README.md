@@ -1,36 +1,41 @@
-# Labecommerce Back E nd
+# Labecommerce Back End
 ![Labecommerce](./src/assets/ecommerce.png)
 
-## Índice
-- <a href="#-introducao"> Introdução </a>
-- <a href="#-tecnologias-utilizadas"> Tecnologias utilizadas </a>
-- <a href="#-funcionabilidades"> Funcionabilidades do Projeto </a>
-- <a href="#-aplicacoes-utilizadas"> Aplicações utilizadas </a>
-- <a href="#-documentacao"> Documentação </a>
-- <a href="#-rodando-projeto"> Rodando Projeto </a>
-- <a href="#-contato"> Contato </a>
-## 📑Introdução
-    Este Projeto é um Labecommerce.
+<!-- ## Índice
 
-## ⚙️Tecnologias utilizadas
+* [Introdução](#introdução)
+* [Tecnologias utilizadas](#tecnologias-utilizadas)
+* [Funcionabilidades do Projeto](#funcionabilidades-do-projeto)
+* [Aplicações utilizadas](#aplicações-utilizadas)
+* [Documentação](#documentação)
+* [Rodando o projeto](#rodando-o-projeto) -->
+
+## 📑Introdução
+    Este Projeto é um Labecommerce. 
+
+## ⚙️Tecnologias utilizadas 
+
 1. ``Node.js``
 2. ``Typescript.js``
 3. ``API``
 4. ``Express``
 5. ``SQL``
 
-##  📱 Funcionabilidades do Projeto
+## 📱Funcionabilidades do Projeto
+
 - [x] Cadastro de usuário:
 - Id;
 - E-mail;
 - Password. 
 <br>
+
 - [x] Cadastro de produtos:
 - Id;
 - Name;
 - Price;
 - Category.
 <br>
+
 - [x] Cadastro de compras:
 - User Id;
 - Product Id;
