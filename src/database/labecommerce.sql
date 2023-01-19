@@ -70,6 +70,11 @@ SELECT * FROM users ORDER BY email ASC;
 SELECT * FROM products ORDER BY price ASC
 LIMIT 20 OFFSET 1;
 
+-- Get All Products(refatorado)
+SELECT * FROM products 
+WHERE price >= 100 AND price <= 300
+ORDER BY price ASC;
+
 
 
 
