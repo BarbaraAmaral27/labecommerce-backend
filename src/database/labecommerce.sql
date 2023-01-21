@@ -97,7 +97,7 @@ VALUES ("c001", 100, 0, "u002"),
 --Atualizar purchases com pagamento = 1 e data atualizada da entrega
 UPDATE purchases
 SET paid = 1, delivered_at = DATETIME('now')
-WHERE id = "c002";
+WHERE id = "c003";
 
 --Query de consulta com JOIN das tabelas (users e purchases)
 SELECT 
@@ -109,5 +109,26 @@ purchases.delivered_at
 FROM purchases
 JOIN users ON purchases.buyer_id = users.id
 WHERE users.id = "u003";    
+
+
+CREATE TABLE purchases_products (
+    purchase_id TEXT NOT NULL,
+    product_id TEXT NOT NULL, 
+    quantity INTEGER NOT NULL 
+    );
+
+SELECT * FROM purchases_products;
+
+INSERT INTO purchases_products (purchase_id, product_id, quantity)
+VALUES ("c001","p001", 2),
+        ("c002","p001", 4),
+        ("c003", "p002", 3);
+
+--Consulta com INNER JOING de 3 tabelas
+SELECT purchases_products.*, purchases.*, products.*
+FROM purchases_products
+INNER JOIN purchases ON purchases_products.purchase_id = purchases.id
+INNER JOIN products ON purchases_products.product_id = products.id;
+
 
 
