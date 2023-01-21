@@ -75,7 +75,39 @@ SELECT * FROM products
 WHERE price >= 100 AND price <= 300
 ORDER BY price ASC;
 
+CREATE TABLE purchases (
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    total_price REAL NOT NULL,
+    paid INTEGER NOT NULL,
+    delivered_at TEXT,
+    buyer_id TEXT NOT NULL,
+    FOREIGN KEY (buyer_id) REFERENCES users(id)
+);
 
+SELECT * FROM purchases;
 
+INSERT INTO purchases(id, total_price, paid, buyer_id)
+VALUES ("c001", 100, 0, "u002"),
+        ("c002", 50, 0, "u002"),
+        ("c003", 30, 0, "u003"),
+        ("c004", 80, 0, "u003"),
+        ("c005", 20, 0, "u004"),
+        ("c006", 60, 0, "u004");
+
+--Atualizar purchases com pagamento = 1 e data atualizada da entrega
+UPDATE purchases
+SET paid = 1, delivered_at = DATETIME('now')
+WHERE id = "c002";
+
+--Query de consulta com JOIN das tabelas (users e purchases)
+SELECT 
+users.id AS idUsers,
+purchases.id,
+purchases.total_price,
+purchases.paid,
+purchases.delivered_at
+FROM purchases
+JOIN users ON purchases.buyer_id = users.id
+WHERE users.id = "u003";    
 
 
