@@ -31,10 +31,11 @@ app.get("/ping", (req: Request, res: Response) => {
 //GET All users
 app.get("/users", async (req: Request, res: Response) => {
   try {
-    const result = await db.raw(`
-    SELECT * FROM users`);
+
+    const result = await db("users") 
 
     res.status(200).send({ users: result });
+
   } catch (error: any) {
     console.log(error);
 
@@ -48,10 +49,11 @@ app.get("/users", async (req: Request, res: Response) => {
 //GET All products
 app.get("/products", async (req: Request, res: Response) => {
   try {
-    const result = await db.raw(`
-    SELECT * FROM products`);
+    
+    const result = await db("products")
 
     res.status(200).send({ products: result });
+
   } catch (error: any) {
     console.log(error);
 
@@ -65,9 +67,11 @@ app.get("/products", async (req: Request, res: Response) => {
 //GET All purchase
 app.get("/purchases", async (req: Request, res: Response) => {
   try {
-    const result = await db.raw(`SELECT * FROM purchases;`);
+    
+    const result = await db("purchases")
 
-    res.status(200).send(result);
+    res.status(200).send({purchases: result});
+
   } catch (error: any) {
     console.log(error);
 
@@ -94,6 +98,7 @@ app.get("/products/search", async (req: Request, res: Response) => {
     `);
 
     res.status(200).send({ product: product });
+
   } catch (error: any) {
     console.log(error);
 
@@ -107,10 +112,10 @@ app.get("/products/search", async (req: Request, res: Response) => {
 //POST Create User
 app.post("/users", async (req: Request, res: Response) => {
   try {
-    const { id, name, email, password, created_at } = req.body;
+    const { id, name, email, password, created_at } = req.body as TUser;
 
     if (id !== undefined) {
-      if (typeof id != "string") {
+      if (typeof id !== "string") {
         res.status(400);
         throw new Error("'id' inválido, deve ser uma string!");
       }
@@ -187,6 +192,7 @@ app.post("/users", async (req: Request, res: Response) => {
     VALUES ("${id}", "${name}", "${email}","${password}")`);
 
     res.status(201).send(`${name} cadastrado com sucesso!`);
+
   } catch (error: any) {
     console.log(error);
 
@@ -201,7 +207,7 @@ app.post("/users", async (req: Request, res: Response) => {
 //POST Create Product
 app.post("/products", async (req: Request, res: Response) => {
   try {
-    const { id, name, price, description, category, image_url } = req.body;
+    const { id, name, price, description, category, image_url } = req.body as TProduct;
 
     if (id !== undefined) {
       if (typeof id !== "string") {
@@ -276,7 +282,8 @@ app.post("/products", async (req: Request, res: Response) => {
     VALUES ("${id}", "${name}", "${price}", "${description}", "${category}", "${image_url}");
     `);
 
-    res.status(201).send(`${name} cadastrado com sucesso!`);
+    res.status(201).send(`Produto ${name} cadastrado com sucesso!`);
+    
   } catch (error: any) {
     console.log(error);
 
@@ -369,6 +376,62 @@ app.post("/purchases", async (req: Request, res: Response) => {
   }
 });
 
+
+//busca compras por id
+app.get("/purchases/:id", async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+
+    const [ purchase ] = await db("purchases").where({ id: id })
+
+    if(purchase){
+            
+      const [purchase] = await db("purchases")
+      .select(
+          "purchases.id AS purchaseID",
+          "purchases.total_price AS totalPrice",
+          "purchases.created_at AS createdAt",
+          "purchases.paid AS isPaid",
+          "users.id AS buyerID",
+          "users.email",
+          "users.name"
+        )
+      .innerJoin("users","purchases.buyer","=","users.id")
+      .where({'purchases.id': id});
+
+      const purchaseProducts = await db("purchases_products")
+      .select("purchases_products.product_id AS id",
+      "products.name",
+      "products.price",
+      "products.description",
+      "products.image_url AS urlImage",
+      "purchases_products.quantity")
+      .innerJoin("products","products.id","=","purchases_products.product_id")
+      const result = {...purchase, productsList:purchaseProducts}
+      res.status(200).send({purchase: result});
+
+      }  
+
+    if (!purchase) {
+      res.status(400); // definimos um status code apropriado antes do disparo
+      throw new Error("A compra não existe!");
+    }
+
+
+  } catch (error: any) {
+    console.log(error);
+
+    if (res.statusCode === 200) {
+      res.status(500);
+    }
+
+    res.send(error.message);
+  }
+});
+
+
+
+
 //busca produtos por id
 app.get("/products/:id", async (req: Request, res: Response) => {
   try {
@@ -385,6 +448,7 @@ app.get("/products/:id", async (req: Request, res: Response) => {
     }
 
     res.status(200).send({ product: product });
+
   } catch (error: any) {
     console.log(error);
 
