@@ -5,7 +5,7 @@
 
 
 ## 📑Introdução
-    Este Projeto é um Labecommerce. 
+    Este Projeto é o back end de um e-commerce.
 
 ## ⚙️Tecnologias utilizadas 
 
