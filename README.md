@@ -1,46 +1,51 @@
 # Labecommerce Back End
 ![Labecommerce](./src/assets/ecommerce.png)
 
-<!-- ## Índice
+![Badge Finalizado](http://img.shields.io/static/v1?label=STATUS&message=FINALIZADO&color=RED&style=for-the-badge)
 
-* [Introdução](#introdução)
-* [Tecnologias utilizadas](#tecnologias-utilizadas)
-* [Funcionabilidades do Projeto](#funcionabilidades-do-projeto)
-* [Aplicações utilizadas](#aplicações-utilizadas)
-* [Documentação](#documentação)
-* [Rodando o projeto](#rodando-o-projeto) -->
 
 ## 📑Introdução
     Este Projeto é um Labecommerce. 
 
 ## ⚙️Tecnologias utilizadas 
 
-1. ``Node.js``
-2. ``Typescript.js``
-3. ``API``
-4. ``Express``
-5. ``SQL``
+1. ``Node``
+2. ``Typescript``
+3. ``Express``
+4. ``SQL e SQLite``
+5. ``Knex``
+6. ``Postman``
 
 ## 📱Funcionabilidades do Projeto
 
-- [x] Cadastro de usuário:
-- Id;
-- E-mail;
-- Password. 
+- [x] Cadastro de users:
+- id;
+- name;
+- email;
+- password;
+- created_at.
 <br>
 
-- [x] Cadastro de produtos:
-- Id;
-- Name;
-- Price;
-- Category.
+- [x] Cadastro de purchases:
+- id;
+- buyer;
+- total_price;
+- created_at;
+- paid.
 <br>
 
-- [x] Cadastro de compras:
-- User Id;
-- Product Id;
-- Quantity;
-- Total Price.
+- [x] Cadastro de purchases_products:
+- purchase_id;
+- product_id;
+- quantity.
+<br>
+
+- [x] Cadastro de products:
+- id;
+- name;
+- price;
+- description;
+- image_url.
  
 ## Aplicações utilizadas
 - Postman
