@@ -1,28 +1,65 @@
 -- Active: 1674078227459@@127.0.0.1@3306
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    created_at TEXT DEFAULT(DATETIME()) NOT NULL
 );
 
-INSERT INTO users (id, email, password)
-VALUES ("u001","evandro@labenu","123456"),
-        ("u002", "aline@labenu","654321"),
-        ("u003","paula@labenu","595569");
+INSERT INTO users (id, name, email, password)
+VALUES ("u001", "Evandro", "evandro@labenu","123456"),
+        ("u002", "Aline", "aline@labenu","654321"),
+        ("u003", "Paula", "paula@labenu","595569");
+
+SELECT * FROM users;
 
 CREATE TABLE products (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
     price REAL NOT NULL,
-    category TEXT NOT NULL
+    description TEXT NOT NULL,
+    category TEXT NOT NULL,
+    image_url TEXT NOT NULL
 );  
 
-INSERT INTO products (id, name, price, category)
-VALUES ("p001", "Gargantinha Estrelas", 80, "Acessórios"),
-        ("p002", "Corrente Dourada", 100, "Acessórios"),
-        ("p003", "Brinco Pérola", 60, "Acessórios"),
-        ("p004", "Calça Jeans", 50, "Roupas e calçados"),
-        ("p005", "Camiseta Preta", 120, "Roupas e calçados");
+INSERT INTO products (id, name, price, description, category, image_url)
+VALUES (
+        "p001", 
+        "Gargantinha Estrelas", 
+        80,
+        "Gargantilha semijoia folheada pingentes estrelas", 
+        "Acessórios",
+        "https://http2.mlstatic.com/D_NQ_NP_957367-MLB44536019148_012021-O.webp"
+    ), (
+        "p002", 
+        "Corrente", 
+        100, 
+        "Corrente de elos dourada",
+        "Acessórios",
+        "https://www.piuka.com.br/media/catalog/product/cache/67e72deeb45f53794a57e07fb433497d/c/h/choker-piuka-cami-elos-grumet-folheada-a-ouro-18k-2.jpg"
+    ), (
+        "p003", 
+        "Brinco Pérola", 
+        60, 
+        "Brinco folheado a ouro com pérolas",
+        "Acessórios",
+        "https://dryzun.vteximg.com.br/arquivos/ids/160287-1000-1000/091885.jpg?v=637442689816800000"
+    ), (
+        "p004", 
+        "Calça Jeans Feminina", 
+        50,
+        "Calça jeans MOM lavagem média",
+        "Roupas e calçados",
+        "https://tfbsmy.vteximg.com.br/arquivos/ids/195849-830-830/96213051f.jpg?v=638067995583900000"
+    ), (
+        "p005", 
+        "Camiseta Preta Feminina", 
+        120, 
+        "Camiseta Feminina preta em algodão",
+        "Roupas e calçados",
+        "https://cdn.shopify.com/s/files/1/0526/4123/5093/products/4_10a008ca-c649-4620-b54d-cdbd7a923816.png?v=1669404166"
+        );
 
 -- Get All Users
 SELECT * FROM users;
@@ -34,12 +71,12 @@ SELECT * FROM products;
 SELECT * FROM  products WHERE name LIKE "%Gargantinha Estrelas%";
 
 -- Create User
-INSERT INTO users(id, email, password)
-VALUES ("u004", "joao@labneu", "265658");
+INSERT INTO users(id, name, email, password)
+VALUES ("u004", "João", "joao@labenu", "265658");
 
 -- Create Product
-INSERT INTO products(id, name, price, category)
-VALUES ("p006", "Camisa Jeans", 120, "Roupas e calçados");    
+INSERT INTO products(id, name, price, description, category, image_url)
+VALUES ("p006", "Jaqueta Jeans", 120, "Jaqueta Feminina Jeans Lavagem Média", "Roupas e calçados", "https://img.lojasrenner.com.br/item/667245559/large/6.jpg");    
 
 -- Get Products by IDENTIFIED
 SELECT * FROM products
@@ -77,26 +114,26 @@ ORDER BY price ASC;
 
 CREATE TABLE purchases (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    buyer TEXT NOT NULL,
     total_price REAL NOT NULL,
+    created_at TEXT DEFAULT(DATETIME()) NOT NULL,
     paid INTEGER NOT NULL,
-    delivered_at TEXT,
-    buyer_id TEXT NOT NULL,
-    FOREIGN KEY (buyer_id) REFERENCES users(id)
+    FOREIGN KEY (buyer) REFERENCES users(id)
 );
 
 SELECT * FROM purchases;
 
-INSERT INTO purchases(id, total_price, paid, buyer_id)
-VALUES ("c001", 100, 0, "u002"),
-        ("c002", 50, 0, "u002"),
-        ("c003", 30, 0, "u003"),
-        ("c004", 80, 0, "u003"),
-        ("c005", 20, 0, "u004"),
-        ("c006", 60, 0, "u004");
+INSERT INTO purchases(id, buyer, total_price, paid)
+VALUES ("c001", "u001", 100, 0),
+        ("c002", "u001", 50, 0),
+        ("c003", "u002", 30, 0),
+        ("c004", "u002", 80, 0),
+        ("c005", "u003", 20, 0),
+        ("c006", "u003", 60, 0);
 
 --Atualizar purchases com pagamento = 1 e data atualizada da entrega
 UPDATE purchases
-SET paid = 1, delivered_at = DATETIME('now')
+SET paid = 1, created_at = DATETIME('now')
 WHERE id = "c003";
 
 --Query de consulta com JOIN das tabelas (users e purchases)
@@ -104,10 +141,10 @@ SELECT
 users.id AS idUsers,
 purchases.id,
 purchases.total_price,
-purchases.paid,
-purchases.delivered_at
+purchases.created_at,
+purchases.paid
 FROM purchases
-JOIN users ON purchases.buyer_id = users.id
+JOIN users ON purchases.buyer = users.id
 WHERE users.id = "u003";    
 
 -- Tabela de relação
@@ -121,7 +158,6 @@ CREATE TABLE purchases_products (
 
 SELECT * FROM purchases_products;
 
-
 INSERT INTO purchases_products (purchase_id, product_id, quantity)
 VALUES ("c001","p001", 2),
         ("c002","p001", 4),
@@ -130,14 +166,15 @@ VALUES ("c001","p001", 2),
 --Consulta com INNER JOIN de 3 tabelas
 SELECT
 purchases.id,
+purchases.buyer,
 purchases.total_price,
+purchases.created_at,
 purchases.paid,
-purchases.delivered_at,
-purchases.buyer_id,
 purchases_products.product_id AS productId,
 purchases_products.quantity,
 products.name,
 products.price,
+products.description,
 products.category
 FROM purchases
 LEFT JOIN purchases_products 
